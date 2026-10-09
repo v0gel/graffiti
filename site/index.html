@@ -160,6 +160,79 @@
     .div { background:rgba(255,255,255,.12); }
   }
   @media (max-width: 520px) { .win { left:10px; right:10px; } .wall { width:auto; left:8px !important; right:8px; } .wall-head span { display:none; } .doc { font-size:16px; } }
+
+  /* install help: the pop-up and the walkthrough */
+  .mac-alert { width:260px; margin:0 auto; background:#f3f2f0; color:#1e1e1e; border-radius:16px; padding:18px 16px 14px; text-align:center;
+               box-shadow:0 12px 40px rgba(0,0,0,.25), 0 0 0 1px rgba(0,0,0,.08); font:13px/1.35 -apple-system, BlinkMacSystemFont, sans-serif; }
+  .mac-alert .ma-icon { width:54px; height:54px; display:block; margin:0 auto 8px; border-radius:12px; }
+  .mac-alert b { display:block; font-size:14px; margin-bottom:6px; }
+  .mac-alert span { display:block; color:#444; font-size:12px; margin-bottom:12px; }
+  .ma-btn { display:block; font-style:normal; padding:6px 0; border-radius:8px; background:#e2e1de; margin-top:6px; font-weight:500; }
+  .ma-primary { background:#0a84ff; color:#fff; }
+  .hl { animation:ring 1.6s ease-in-out infinite; position:relative; }
+  @keyframes ring { 0%,100% { box-shadow:0 0 0 0 rgba(255,149,0,.0) } 50% { box-shadow:0 0 0 5px rgba(255,149,0,.75) } }
+  dialog.help { border:0; border-radius:18px; padding:0; max-width:520px; width:calc(100% - 32px); background:var(--card); color:var(--ink);
+                box-shadow:0 30px 80px rgba(0,0,0,.35); }
+  dialog.help::backdrop { background:rgba(20,20,20,.45); backdrop-filter:blur(3px); }
+  .help-in { padding:26px 26px 22px; }
+  .help h3 { margin:0 0 6px; font-size:22px; }
+  .help p { margin:0 0 14px; color:var(--mute); font-size:15px; }
+  .help .note-done { text-align:center; margin:14px 0 4px; font-weight:600; color:var(--ink); }
+  .help ol { margin:8px 0 14px; padding-left:22px; font-size:15px; } .help ol li { margin:5px 0; }
+  .help-btns { display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap; }
+  .help-btns button { font:600 15px -apple-system, sans-serif; border-radius:10px; padding:10px 16px; cursor:pointer; border:1px solid var(--line); background:var(--key); color:var(--ink); }
+  .help-btns .go { background:var(--ink); color:var(--wall); border-color:var(--ink); }
+
+  .walk { position:relative; height:360px; border-radius:14px; overflow:hidden; border:1px solid var(--line);
+          background:linear-gradient(160deg, #e9e7e1, #d9d6ce); }
+  @media (prefers-color-scheme: dark) { .walk { background:linear-gradient(160deg, #262624, #1b1b1a); } }
+  .wf { position:absolute; inset:0; display:grid; place-items:center; opacity:0; transition:opacity .45s; pointer-events:none; }
+  .wf.on { opacity:1; }
+  .mwin { width:min(440px, 86%); background:#fbfbfa; color:#1e1e1e; border-radius:12px; box-shadow:0 14px 40px rgba(0,0,0,.18);
+          border:1px solid rgba(0,0,0,.08); overflow:hidden; font:13px -apple-system, sans-serif; position:relative; }
+  .mbar { height:28px; display:flex; align-items:center; gap:6px; padding:0 10px; background:#ecebe7; border-bottom:1px solid #ddd; color:#666; font-size:12px; }
+  .mbar i { width:10px; height:10px; border-radius:50%; background:#ff5f57; } .mbar i:nth-child(2) { background:#febc2e; } .mbar i:nth-child(3) { background:#28c840; }
+  .mbar span { margin-left:8px; }
+  .mbody { padding:22px; display:flex; align-items:center; justify-content:space-around; gap:16px; min-height:150px; position:relative; }
+  .ico { display:flex; flex-direction:column; align-items:center; gap:6px; font-size:12px; position:relative; }
+  .ico img, .ico .folder, .ico .gear { width:64px; height:64px; border-radius:14px; }
+  .folder { background:linear-gradient(#73b8ff, #3d8fe8); border-radius:10px !important; position:relative; }
+  .folder::before { content:""; position:absolute; left:6px; top:-7px; width:24px; height:10px; background:#73b8ff; border-radius:4px 4px 0 0; }
+  .gear { background:#8e8e93; display:grid; place-items:center; color:#fff; font-size:34px; }
+  .arrow { font-size:34px; color:#333; }
+  .drag { position:absolute; left:22px; top:22px; width:64px; height:64px; border-radius:14px; opacity:.85; animation:drag 2.6s ease-in-out infinite; }
+  @keyframes drag { 0%,15% { transform:translate(0,0) } 70%,100% { transform:translate(var(--dx, 250px),0); opacity:.2 } }
+  .cursor { position:absolute; width:18px; height:18px; z-index:5; pointer-events:none;
+            background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'><path d='M2 1l13 8-6 1.4L6.5 17z' fill='black' stroke='white' stroke-width='1.2'/></svg>") no-repeat; }
+  .click::after { content:""; position:absolute; left:-10px; top:-10px; width:38px; height:38px; border-radius:50%; border:2px solid #ff9500; animation:clickr 1.4s ease-out infinite; }
+  @keyframes clickr { 0% { transform:scale(.3); opacity:1 } 70%,100% { transform:scale(1.2); opacity:0 } }
+  .set { display:grid; grid-template-columns:120px 1fr; min-height:200px; }
+  .set .side { background:#efeeea; padding:10px 8px; font-size:12px; color:#555; }
+  .set .side div { padding:5px 8px; border-radius:6px; } .set .side .sel { background:#0a84ff; color:#fff; }
+  .set .pane { padding:14px 16px; font-size:12px; }
+  .set .pane h4 { margin:0 0 8px; font-size:13px; }
+  .row { display:flex; justify-content:space-between; align-items:center; gap:10px; padding:8px 10px; background:#fff; border:1px solid #e6e5e1; border-radius:8px; margin-bottom:8px; }
+  .pill { padding:4px 10px; border-radius:7px; background:#e2e1de; font-weight:600; white-space:nowrap; }
+  .pill.blue { background:#0a84ff; color:#fff; }
+  .pw { width:min(300px, 80%); background:#f3f2f0; color:#1e1e1e; border-radius:14px; padding:18px; text-align:center; box-shadow:0 12px 40px rgba(0,0,0,.25); font:13px -apple-system, sans-serif; }
+  .pw .dots { margin:12px auto; width:80%; padding:7px; border-radius:7px; background:#fff; border:1px solid #ccc; text-align:left; letter-spacing:3px; }
+  .pw .dots::after { content:"••••••••"; display:inline-block; overflow:hidden; vertical-align:bottom; animation:type 2.4s steps(8) infinite; width:0; }
+  @keyframes type { 0% { width:0 } 60%,100% { width:8ch } }
+  .menubar { position:absolute; top:0; left:0; right:0; height:30px; background:rgba(255,255,255,.75); display:flex; align-items:center; justify-content:flex-end; gap:16px; padding:0 16px; font:13px -apple-system, sans-serif; color:#1e1e1e; }
+  .menubar img { width:18px; height:18px; animation:pop 1.6s ease-in-out infinite; }
+  @keyframes pop { 50% { transform:scale(1.35) } }
+  .toggle { width:34px; height:20px; border-radius:10px; background:#ccc; position:relative; animation:tog 2.4s infinite; }
+  .toggle::after { content:""; position:absolute; top:2px; left:2px; width:16px; height:16px; border-radius:50%; background:#fff; animation:knob 2.4s infinite; }
+  @keyframes tog { 0%,40% { background:#ccc } 55%,100% { background:#34c759 } }
+  @keyframes knob { 0%,40% { left:2px } 55%,100% { left:16px } }
+  .walk-cap { display:flex; align-items:center; gap:12px; margin-top:12px; }
+  .walk-cap p { flex:1; margin:0; font-size:16px; min-height:48px; }
+  .walk-cap .stepn { font:700 13px ui-rounded, -apple-system, sans-serif; color:var(--mute); white-space:nowrap; }
+  .walk-cap button { font:600 14px -apple-system, sans-serif; width:36px; height:36px; border-radius:10px; border:1px solid var(--line); background:var(--key); color:var(--ink); cursor:pointer; }
+  .walk-dots { display:flex; gap:6px; justify-content:center; margin-top:10px; }
+  .walk-dots b { width:8px; height:8px; border-radius:50%; background:var(--line); cursor:pointer; }
+  .walk-dots b.on { background:var(--ink); }
+  details.steps { margin-top:14px; } details.steps summary { cursor:pointer; color:var(--mute); font-size:14px; }
 </style>
 </head>
 <body>
@@ -197,15 +270,23 @@
     </div>
   </section>
 
-  <section>
-    <h2>Install</h2>
+  <section id="install">
+    <h2>Install, step by step</h2>
     <div class="card">
-      <ol>
-        <li>Open <strong>Graffiti.dmg</strong> and drag Graffiti to <strong>Applications</strong>.</li>
-        <li>Open Graffiti from Applications. If your Mac blocks it, click <strong>Done</strong>.</li>
-        <li>Double-click <strong>Allow Graffiti</strong> in the installer window, scroll down, click <strong>Open Anyway</strong>, then <strong>Open</strong>.</li>
-        <li>Choose <strong>Allow Pasting and Open at Login</strong>, and switch Graffiti on in the settings that open. Look for the spray can in your menu bar. Updates arrive by themselves.</li>
-      </ol>
+      <div class="walk" id="walk" aria-label="Animation: the install steps">
+        <div class="wf" data-cap="Open <b>Graffiti.dmg</b> and drag Graffiti into <b>Applications</b>."><div class="mwin"><div class="mbar"><i></i><i></i><i></i><span>Graffiti</span></div><div class="mbody"><div class="ico"><img src="icon.png" alt="">Graffiti</div><div class="arrow">&#10140;</div><div class="ico"><div class="folder"></div>Applications</div><img class="drag" src="icon.png" alt="" style="--dx:255px"></div></div></div>
+        <div class="wf" data-cap="Open <b>Graffiti</b> from your Applications folder."><div class="mwin"><div class="mbar"><i></i><i></i><i></i><span>Applications</span></div><div class="mbody"><div class="ico"><div class="gear" style="background:#d0d0d0"></div>Calendar</div><div class="ico"><img src="icon.png" alt="">Graffiti<span class="cursor click" style="left:40px;top:34px"></span></div><div class="ico"><div class="gear" style="background:#c9c9c9"></div>Notes</div></div></div></div>
+        <div class="wf" data-cap="Your Mac stops it the first time. Click <b>Done</b>, not Move to Trash. Nothing is wrong with Graffiti."><div class="mac-alert"><img src="icon.png" alt="" class="ma-icon"><b>&ldquo;Graffiti&rdquo; Not Opened</b><span>Apple could not verify &ldquo;Graffiti&rdquo; is free of malware that may harm your Mac or compromise your privacy.</span><i class="ma-btn ma-primary hl">Done<span class="cursor click" style="right:30px;top:8px"></span></i><i class="ma-btn">Move to Trash</i></div></div>
+        <div class="wf" data-cap="Go back to the installer window and double-click <b>Allow Graffiti</b>."><div class="mwin"><div class="mbar"><i></i><i></i><i></i><span>Graffiti</span></div><div class="mbody"><div class="ico"><img src="icon.png" alt="">Graffiti.app</div><div class="ico"><div class="folder"></div>Applications</div><div class="ico"><div class="gear">&#9881;</div>Allow Graffiti<span class="cursor click" style="left:40px;top:34px"></span></div></div></div></div>
+        <div class="wf" data-cap="Settings opens on <b>Privacy &amp; Security</b>. Click <b>Open Anyway</b>."><div class="mwin"><div class="mbar"><i></i><i></i><i></i><span>Privacy &amp; Security</span></div><div class="set"><div class="side"><div>General</div><div>Appearance</div><div class="sel">Privacy &amp; Security</div><div>Desktop &amp; Dock</div></div><div class="pane"><h4>Security</h4><div class="row">Allow applications from<span class="pill">App Store &amp; Known Developers</span></div><div class="row">&ldquo;Graffiti&rdquo; was blocked to protect your Mac.<span class="pill blue hl" style="position:relative">Open Anyway<span class="cursor click" style="right:6px;top:10px"></span></span></div></div></div></div></div>
+        <div class="wf" data-cap="Type your Mac password (or use Touch ID) to allow it."><div class="pw"><b>Privacy &amp; Security</b><div style="color:#555;margin-top:6px">Enter your password to allow this.</div><div class="dots"></div><span class="pill blue hl" style="display:inline-block">OK</span></div></div>
+        <div class="wf" data-cap="Your Mac asks one last time. Click <b>Open Anyway</b>."><div class="mac-alert"><img src="icon.png" alt="" class="ma-icon"><b>Open &ldquo;Graffiti&rdquo;?</b><span>Apple could not verify &ldquo;Graffiti&rdquo; is free of malware. You can open it because you allowed it in Privacy &amp; Security.</span><i class="ma-btn ma-primary hl" style="position:relative">Open Anyway<span class="cursor click" style="right:30px;top:8px"></span></i><i class="ma-btn">Move to Trash</i></div></div>
+        <div class="wf" data-cap="Graffiti says hi. Click <b>Allow Pasting and Open at Login</b>, then switch Graffiti on."><div class="mwin" style="width:min(380px,86%)"><div class="mbody" style="flex-direction:column;align-items:flex-start;gap:10px;min-height:0"><img src="wordmark.png" alt="Graffiti" style="height:22px;filter:brightness(0) invert(.12)"><div style="font-size:12px;color:#555">To paste for you, Graffiti needs permission to control your Mac (Accessibility).</div><div style="display:flex;gap:8px;align-self:flex-end"><span class="pill">Not Now</span><span class="pill blue hl">Allow Pasting and Open at Login</span></div><div class="row" style="width:100%;margin:6px 0 0">Accessibility &middot; Graffiti<div class="toggle"></div></div></div></div></div>
+        <div class="wf" data-cap="Look for the spray can in your menu bar. <b>&#8963;&#8984;V</b> opens the wall. You only do this once, and updates install themselves."><div class="menubar"><span>&#9673;</span><img src="favicon.svg" alt="Graffiti"><span>Fri 9:41</span></div><div style="font:600 28px -apple-system,sans-serif;color:#1e1e1e;text-align:center">You&rsquo;re set. <span style="color:#555;font-weight:500;font-size:20px;display:block;margin-top:6px">&#8963;&#8984;V opens the wall.</span></div></div>
+      </div>
+      <div class="walk-cap"><button type="button" id="wprev" aria-label="Previous step">&#8249;</button><span class="stepn" id="wstep"></span><p id="wcap"></p><button type="button" id="wnext" aria-label="Next step">&#8250;</button></div>
+      <div class="walk-dots" id="wdots"></div>
+      <details class="steps"><summary>All the steps as a list</summary><ol><li>Open <b>Graffiti.dmg</b> and drag Graffiti into <b>Applications</b>.</li><li>Open <b>Graffiti</b> from your Applications folder.</li><li>Your Mac stops it the first time. Click <b>Done</b>, not Move to Trash. Nothing is wrong with Graffiti.</li><li>Go back to the installer window and double-click <b>Allow Graffiti</b>.</li><li>Settings opens on <b>Privacy &amp; Security</b>. Click <b>Open Anyway</b>.</li><li>Type your Mac password (or use Touch ID) to allow it.</li><li>Your Mac asks one last time. Click <b>Open Anyway</b>.</li><li>Graffiti says hi. Click <b>Allow Pasting and Open at Login</b>, then switch Graffiti on.</li><li>Look for the spray can in your menu bar. <b>&#8963;&#8984;V</b> opens the wall. You only do this once, and updates install themselves.</li></ol></details>
     </div>
   </section>
 
@@ -248,6 +329,22 @@
     <p>© <span id="year">2026</span> Kingdom of Id</p>
   </footer>
 </main>
+<dialog class="help" id="help" aria-labelledby="help-title">
+  <div class="help-in">
+    <h3 id="help-title">Your download has started</h3>
+    <p>One heads-up before you open it. Graffiti isn&rsquo;t registered with Apple yet, so the first time you open it your Mac shows this:</p>
+    <div class="mac-alert"><img src="icon.png" alt="" class="ma-icon"><b>&ldquo;Graffiti&rdquo; Not Opened</b><span>Apple could not verify &ldquo;Graffiti&rdquo; is free of malware that may harm your Mac or compromise your privacy.</span><i class="ma-btn ma-primary hl">Done</i><i class="ma-btn">Move to Trash</i></div>
+    <p class="note-done">Click <b>Done</b>, not Move to Trash. Nothing is wrong with Graffiti.</p>
+    <ol>
+      <li>In the installer window, double-click <b>Allow Graffiti</b>.</li>
+      <li>Click <b>Open Anyway</b> and type your Mac password.</li>
+      <li>Click <b>Open Anyway</b> once more. Graffiti opens.</li>
+    </ol>
+    <p>You only do this once. Updates install themselves.</p>
+    <div class="help-btns"><button type="button" id="help-show">Show me step by step</button><button type="button" class="go" id="help-ok">Got it</button></div>
+  </div>
+</dialog>
+
 <script>
 document.getElementById('year').textContent = new Date().getFullYear();
 (() => {
@@ -267,6 +364,33 @@ document.getElementById('year').textContent = new Date().getFullYear();
     n += 1; show(); num.classList.add('bump'); setTimeout(() => num.classList.remove('bump'), 250);
   });
 })();
+(() => {
+  const walk = document.getElementById('walk'), frames = [...walk.querySelectorAll('.wf')];
+  const cap = document.getElementById('wcap'), stepn = document.getElementById('wstep'), dots = document.getElementById('wdots');
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let i = 0, timer = null, visible = false;
+  frames.forEach((_, k) => { const b = document.createElement('b'); b.title = 'Step ' + (k + 1); b.onclick = () => { go(k); hold(); }; dots.append(b); });
+  function go(k) {
+    i = (k + frames.length) % frames.length;
+    frames.forEach((f, n) => f.classList.toggle('on', n === i));
+    [...dots.children].forEach((d, n) => d.classList.toggle('on', n === i));
+    cap.innerHTML = frames[i].dataset.cap; stepn.textContent = (i + 1) + ' of ' + frames.length;
+  }
+  function play() { clearInterval(timer); if (!still && visible) timer = setInterval(() => go(i + 1), 4200); }
+  function hold() { clearInterval(timer); timer = setTimeout(play, 9000); }
+  document.getElementById('wprev').onclick = () => { go(i - 1); hold(); };
+  document.getElementById('wnext').onclick = () => { go(i + 1); hold(); };
+  new IntersectionObserver(([e]) => { visible = e.isIntersecting; visible ? play() : clearInterval(timer); }).observe(walk);
+  go(0);
+  window.graffitiWalk = () => { go(0); document.getElementById('install').scrollIntoView({ behavior: 'smooth' }); };
+
+  const help = document.getElementById('help');
+  document.getElementById('download').addEventListener('click', () => { setTimeout(() => { try { help.showModal(); } catch {} }, 400); });
+  document.getElementById('help-ok').onclick = () => help.close();
+  document.getElementById('help-show').onclick = () => { help.close(); window.graffitiWalk(); };
+  help.addEventListener('click', e => { if (e.target === help) help.close(); });
+})();
+
 </script>
 <script>
 (() => {
