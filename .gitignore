@@ -4,3 +4,4 @@ dist/
 .wrangler/
 .claude/
 CLAUDE.local.md
+developer_only/
