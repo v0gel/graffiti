@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://graffiti.kingdomofid.com/sitemap.xml

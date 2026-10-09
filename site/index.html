@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Graffiti: free clipboard history for Mac · Kingdom of Id</title>
+<meta name="description" content="Graffiti is a free clipboard history app for Mac from Kingdom of Id. Your last ten copies on the wall, one key away: text, code, screenshots, images and files. Private and local only.">
+<meta name="keywords" content="Graffiti, Kingdom of Id, KingdomofId, M. Scott Vogel, clipboard history, clipboard manager, Mac clipboard, macOS clipboard history, paste history, copy paste, free Mac app, menu bar app, clean paste, Claude Code, AI agents, Brooklyn">
+<meta name="author" content="M. Scott Vogel, Kingdom of Id">
+<meta name="publisher" content="Kingdom of Id">
+<meta name="application-name" content="Graffiti">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#fafaf8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#151515" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://graffiti.kingdomofid.com/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Kingdom of Id">
+<meta property="og:title" content="Graffiti: free clipboard history for Mac">
+<meta property="og:description" content="Your last ten copies on the wall, one key away. Free, private, local only. From Kingdom of Id.">
+<meta property="og:url" content="https://graffiti.kingdomofid.com/">
+<meta property="og:image" content="https://graffiti.kingdomofid.com/social.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Graffiti app icon and wordmark: the clipboard history for Mac, free from Kingdom of Id">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Graffiti: free clipboard history for Mac">
+<meta name="twitter:description" content="Your last ten copies on the wall, one key away. Free, private, local only. From Kingdom of Id.">
+<meta name="twitter:image" content="https://graffiti.kingdomofid.com/social.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "Graffiti",
+      "url": "https://graffiti.kingdomofid.com/",
+      "downloadUrl": "https://graffiti.kingdomofid.com/Graffiti.dmg",
+      "image": "https://graffiti.kingdomofid.com/icon.png",
+      "screenshot": "https://graffiti.kingdomofid.com/social.png",
+      "description": "A free clipboard history app for Mac. Your last ten copies on the wall, one key away. Private and local only.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "macOS 13 or later",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "author": { "@type": "Person", "name": "M. Scott Vogel", "url": "https://github.com/v0gel" },
+      "codeRepository": "https://github.com/v0gel/graffiti",
+      "license": "https://opensource.org/licenses/MIT",
+      "publisher": { "@id": "https://kingdomofid.com/#org" }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://kingdomofid.com/#org",
+      "name": "Kingdom of Id",
+      "url": "https://kingdomofid.com/",
+      "email": "hello@kingdomofid.com",
+      "logo": "https://graffiti.kingdomofid.com/icon.png"
+    }
+  ]
+}
+</script>
+<style>
+  :root { --wall:#fafaf8; --ink:#333333; --mute:#6b6b68; --line:#e4e3df; --card:#ffffff; --key:#efeeea; }
+  @media (prefers-color-scheme: dark) { :root { --wall:#151515; --ink:#f2f0eb; --mute:#a3a29c; --line:#2c2c2a; --card:#1d1d1c; --key:#2a2a28; } .mark { filter: brightness(0) invert(0.95); } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--wall); color:var(--ink); font:16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 56px 20px 40px; }
+  header { text-align:center; }
+  header .icon { width:112px; height:112px; border-radius:24px; box-shadow:0 10px 30px rgba(0,0,0,.18); }
+  header .mark { filter: brightness(0) invert(0.2); display:block; margin:26px auto 10px; width:min(420px, 85%); height:auto; }
+  .tag { font-size:20px; margin:0 0 26px; }
+  .btn { display:inline-block; background:var(--ink); color:var(--wall); text-decoration:none; font-weight:600;
+         padding:14px 26px; border-radius:12px; font-size:17px; }
+  .btn:hover { opacity:.88; }
+  .req { color:var(--mute); font-size:13px; margin-top:12px; }
+  .count { margin-top:10px; font-size:15px; color:var(--mute); }
+  .count strong { color:var(--ink); font-variant-numeric:tabular-nums; display:inline-block; transition:transform .25s; }
+  .count strong.bump { transform:scale(1.25); }
+  section { margin-top:52px; }
+  h2 { font-size:13px; letter-spacing:.12em; text-transform:uppercase; color:var(--mute); margin:0 0 14px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px 22px; }
+  ol { margin:0; padding-left:22px; } ol li { margin:8px 0; }
+  table { width:100%; border-collapse:collapse; }
+  td { padding:9px 0; border-bottom:1px solid var(--line); vertical-align:top; }
+  tr:last-child td { border-bottom:0; }
+  td:first-child { width:150px; white-space:nowrap; }
+  kbd { font:600 13px ui-rounded, -apple-system, sans-serif; background:var(--key); border:1px solid var(--line);
+        border-radius:6px; padding:2px 7px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:14px; }
+  .grid .card h3 { margin:0 0 6px; font-size:16px; }
+  .grid .card p { margin:0; color:var(--mute); font-size:14px; }
+  footer { margin-top:60px; text-align:center; color:var(--mute); font-size:14px; }
+  footer strong { color:var(--ink); font-weight:600; }
+  footer a { color:inherit; }
+
+  .stage { position:relative; height:620px; border-radius:14px; border:1px solid var(--line); overflow:hidden;
+           background:linear-gradient(160deg, #e9e7e1, #d9d6ce); }
+  .win { position:absolute; left:28px; right:28px; top:26px; bottom:26px; border-radius:12px; background:var(--card);
+         box-shadow:0 10px 30px rgba(0,0,0,.14); border:1px solid rgba(0,0,0,.08); overflow:hidden; }
+  .bar { height:30px; display:flex; align-items:center; gap:7px; padding:0 12px; background:var(--key); border-bottom:1px solid var(--line);
+         font-size:12px; color:var(--mute); }
+  .bar i { width:11px; height:11px; border-radius:50%; background:#ff5f57; } .bar i:nth-child(2) { background:#febc2e; } .bar i:nth-child(3) { background:#28c840; }
+  .bar span { margin-left:8px; }
+  .doc { padding:18px 22px 0; font-size:19px; font-weight:600; }
+  .doc mark { background:linear-gradient(rgba(10,132,255,.28), rgba(10,132,255,.28)) no-repeat 0 0 / 0% 100%; color:inherit;
+              transition:background-size .9s ease; border-radius:3px; }
+  .doc mark.on { background-size:100% 100%; }
+  .doc p { margin:4px 0 0; font-size:13px; font-weight:400; color:var(--mute); }
+  .field { position:absolute; left:22px; right:22px; top:110px; bottom:22px; border:1px solid var(--line); border-radius:10px;
+           padding:12px 14px; font-size:14px; white-space:pre-wrap; word-break:break-word; overflow:hidden; transition:border-color .3s, opacity .4s; }
+  .field.focus { border-color:#0a84ff; box-shadow:0 0 0 3px rgba(10,132,255,.15); }
+  .field .ph { color:var(--mute); }
+  .field img { display:block; max-height:72px; border-radius:5px; margin:4px 0; }
+  .field .mono { font:12.5px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .caret { display:inline-block; width:1.5px; height:1.1em; background:var(--ink); vertical-align:text-bottom; animation:blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity:0; } }
+  .keys { position:absolute; right:22px; bottom:22px; z-index:9; display:flex; gap:6px; opacity:0; transform:translateY(6px);
+          transition:opacity .2s, transform .2s; }
+  .keys.on { opacity:1; transform:none; }
+  .keys b { min-width:38px; height:38px; padding:0 9px; display:grid; place-items:center; border-radius:9px; background:#333; color:#fafaf8;
+            font:600 17px ui-rounded, -apple-system, sans-serif; box-shadow:0 3px 0 #111, 0 8px 18px rgba(0,0,0,.25); }
+  .caption { text-align:center; color:var(--mute); font-size:14px; margin:12px 0 0; min-height:22px; }
+  .wall { transition:opacity .15s, transform .15s; }
+  .wall.hide { opacity:0; transform:scale(.98); }
+  .row.flash { background:rgba(10,132,255,.28); }
+  .body img { max-height:60px !important; }
+  .wall { position:absolute; z-index:5; width:400px; pointer-events:none; max-width:calc(100% - 8px); padding-bottom:6px; border-radius:12px;
+          background:rgba(250,250,248,.92); -webkit-backdrop-filter:blur(20px) saturate(1.6); backdrop-filter:blur(20px) saturate(1.6);
+          border:1px solid rgba(0,0,0,.12); box-shadow:0 18px 50px rgba(0,0,0,.22), 0 2px 8px rgba(0,0,0,.08);
+          font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif; color:var(--ink); user-select:none; }
+  .wall[hidden] { display:none; }
+  .wall-head { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:8px 12px 6px; }
+  .wall-head img { height:20px; width:auto; filter:brightness(0) invert(0.2); }
+  .wall-head span { font-size:10px; color:var(--mute); opacity:.8; white-space:nowrap; }
+  .row { display:flex; align-items:flex-start; gap:10px; padding:6px 12px; cursor:pointer; }
+  .row.sel { background:rgba(10,132,255,.12); }
+  .num { flex:none; width:20px; height:20px; border-radius:5px; display:grid; place-items:center;
+         font:700 12px ui-rounded, -apple-system, sans-serif; background:rgba(120,120,120,.18); }
+  .row.sel .num { background:#0a84ff; color:#fff; }
+  .held { background:rgba(255,149,0,.08); padding:7px 12px; }
+  .held .num { background:#ff9500; color:#fff; }
+  .body { flex:1; min-width:0; }
+  .body .t { font-size:12px; line-height:1.35; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; white-space:pre-wrap; }
+  .body .code { font:11px/1.35 ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .body .secret { font:12px ui-monospace, Menlo, monospace; color:#ff9500; }
+  .body .name { font-size:12px; font-weight:600; }
+  .body img { display:block; max-width:100%; max-height:90px; border-radius:4px; }
+  .body .f { display:flex; align-items:center; gap:6px; font-size:12px; }
+  .body small { display:block; margin-top:3px; font-size:10px; color:var(--mute); }
+  .pin, .x { flex:none; width:22px; height:22px; border:0; background:none; color:var(--mute); cursor:pointer; padding:0; border-radius:5px; }
+  .pin:hover, .x:hover { background:rgba(120,120,120,.15); }
+  .pin svg, .x svg { width:13px; height:13px; }
+  .div { height:1px; margin:0 12px; background:rgba(0,0,0,.1); }
+  @media (prefers-color-scheme: dark) {
+    .wall { background:rgba(40,40,38,.9); border-color:rgba(255,255,255,.12); }
+    .stage { background:linear-gradient(160deg, #262624, #1b1b1a); }
+    .keys b { background:#f2f0eb; color:#151515; box-shadow:0 3px 0 #999, 0 8px 18px rgba(0,0,0,.4); }
+    .wall-head img { filter:brightness(0) invert(0.95); }
+    .div { background:rgba(255,255,255,.12); }
+  }
+  @media (max-width: 520px) { .win { left:10px; right:10px; } .wall { width:auto; left:8px !important; right:8px; } .wall-head span { display:none; } .doc { font-size:16px; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <img class="icon" src="icon.png" alt="Graffiti app icon">
+    <img class="mark" src="wordmark.png" alt="Graffiti">
+    <p class="tag">The clipboard history for Mac.<br>Your last ten copies on the wall, one key away.</p>
+    <a class="btn" id="download" href="Graffiti.dmg">Download for Mac</a>
+    <div class="req"><span id="ver"></span>Free · macOS 13 or later · Apple silicon and Intel</div>
+    <div class="count" id="count" hidden><strong id="dl">0</strong> <span id="dlword">downloads</span></div>
+  </header>
+
+  <section id="try">
+    <h2>See it work</h2>
+    <div class="stage" id="stage" aria-label="Animation: copying, then pasting from the wall">
+      <div class="win">
+        <div class="bar"><i></i><i></i><i></i><span>Notes</span></div>
+        <div class="doc"><mark id="src">The clipboard history for Mac.</mark><p>Copy anything. Paste any of your last ten.</p></div>
+        <div class="field" id="field"></div>
+      </div>
+      <div class="wall hide" id="wall" hidden></div>
+      <div class="keys" id="keys"></div>
+    </div>
+    <p class="caption" id="caption"></p>
+  </section>
+
+  <section>
+    <h2>Your clipboard, upgraded</h2>
+    <div class="grid">
+      <div class="card"><h3>Every copy, kept</h3><p>Graffiti remembers your last ten clipboard copies: text, code, screenshots, images and files, each with a preview.</p></div>
+      <div class="card"><h3>One key</h3><p><kbd>⌃⌘V</kbd> opens the wall right where you are typing. Pick a number and it pastes.</p></div>
+      <div class="card"><h3>Clean paste</h3><p>Hold <kbd>⇧</kbd> to paste plain text with straight quotes and no prompts, ready for a terminal.</p></div>
+      <div class="card"><h3>Secrets stay secret</h3><p>Passwords and keys show as dots, are never saved, and clear themselves after a minute.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Install</h2>
+    <div class="card">
+      <ol>
+        <li>Open <strong>Graffiti.dmg</strong> and drag Graffiti to <strong>Applications</strong>.</li>
+        <li>Open Graffiti from Applications. If your Mac blocks it, click <strong>Done</strong>.</li>
+        <li>Double-click <strong>Allow Graffiti</strong> in the installer window, scroll down, click <strong>Open Anyway</strong>, then <strong>Open</strong>.</li>
+        <li>Choose <strong>Allow Pasting and Open at Login</strong>, and switch Graffiti on in the settings that open. Look for the spray can in your menu bar. Updates arrive by themselves.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <h2>How to use it</h2>
+    <div class="card">
+      <table>
+        <tr><td><kbd>⌃⌘V</kbd></td><td>Open the wall wherever you are typing</td></tr>
+        <tr><td><kbd>1</kbd> – <kbd>9</kbd>, <kbd>0</kbd></td><td>Paste that clip, or click it</td></tr>
+        <tr><td><kbd>⇧</kbd> + number</td><td>Paste it clean, as plain text</td></tr>
+        <tr><td><kbd>H</kbd></td><td>Paste your held clip. Hold one with the pin, or <kbd>⇧</kbd><kbd>H</kbd></td></tr>
+        <tr><td><kbd>↑</kbd> <kbd>↓</kbd> <kbd>return</kbd></td><td>Choose and paste</td></tr>
+        <tr><td><kbd>esc</kbd></td><td>Close the wall</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Free, and private</h2>
+    <div class="card">
+      <p style="margin-top:0">Graffiti is free. No account, no sign-up, no ads.</p>
+      <p>It keeps your wall on your Mac only, in memory while it runs. Your clips are never sent anywhere and are not stored in any database but your own Mac. Passwords and keys are never saved and clear themselves after a minute. When Graffiti updates itself, it saves your wall on your Mac for a moment so it survives the restart, then deletes that copy.</p>
+      <p style="margin-bottom:0">The only time Graffiti goes online is to check for updates, once a day. That check sends none of your clips. We count downloads, installs and daily update checks as plain totals, with the version number. No names, no addresses, no IDs.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Terms</h2>
+    <div class="card" style="font-size:14px; color:var(--mute)">
+      Graffiti is offered free and as is, with no warranty of any kind. By using it you agree that its developer takes no
+      responsibility for any adverse effects of using it, or for anything you expected to be clipped that was not saved,
+      was cleared, or was lost. Keep anything important somewhere safe.
+    </div>
+  </section>
+
+  <footer>
+    <p><strong>Developed by M. Scott Vogel for <a href="https://kingdomofid.com/">Kingdom of Id</a></strong><br>Designed in Brooklyn ❤️</p>
+    <p><a href="mailto:hello@kingdomofid.com">hello@kingdomofid.com</a></p>
+    <p><a href="https://github.com/v0gel/graffiti">Graffiti on GitHub</a> · <a href="https://github.com/v0gel">Scott on GitHub</a></p>
+    <p>© <span id="year">2026</span> Kingdom of Id</p>
+  </footer>
+</main>
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+(() => {
+  const box = document.getElementById('count'), num = document.getElementById('dl'), word = document.getElementById('dlword');
+  let n = null;
+  const show = () => { num.textContent = n.toLocaleString(); word.textContent = n === 1 ? 'download' : 'downloads'; box.hidden = false; };
+  fetch('/latest.json').then(r => r.json()).then(d => {
+    if (!/^[0-9.]+$/.test(d.version)) return;
+    const a = document.getElementById('download');
+    a.href = 'Graffiti-' + d.version + '.dmg';
+    document.getElementById('ver').textContent = 'Version ' + d.version + ' · ';
+  }).catch(() => {});
+  fetch('/api/count').then(r => r.json()).then(d => { if (typeof d.downloads === 'number') { n = d.downloads; show(); } }).catch(() => {});
+  document.getElementById('download').addEventListener('click', () => {
+    try { navigator.sendBeacon('/api/hit?k=download'); } catch {}
+    if (n === null) return;
+    n += 1; show(); num.classList.add('bump'); setTimeout(() => num.classList.remove('bump'), 250);
+  });
+})();
+</script>
+<script>
+(() => {
+  const stage = document.getElementById('stage'), wall = document.getElementById('wall'), field = document.getElementById('field');
+  const keys = document.getElementById('keys'), caption = document.getElementById('caption'), src = document.getElementById('src');
+  const min = 60000;
+  const ICON = {
+    pin: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M6 1.5h4l-.6 4.2 2.6 2.3H4l2.6-2.3z"/><path d="M8 8v6.5"/></svg>',
+    file: '<svg viewBox="0 0 22 22" width="22" height="22"><path d="M5 2h8l4 4v14H5z" fill="#fff" stroke="#999"/><path d="M13 2v4h4" fill="none" stroke="#999"/><rect x="7" y="12" width="8" height="5" rx="1" fill="#e0412f"/></svg>',
+  };
+  const COPIED = 'The clipboard history for Mac.';
+  const CMD = '$ curl -s “https://graffiti-updates.pages.dev/latest.json”';
+  const seed = () => [
+    { kind: 'text', text: '9400 1118 9922 3344 5566 7710 0423', src: 'Mail', ago: 1 * min },
+    { kind: 'image', src: 'Screenshot', ago: 3 * min },
+    { kind: 'text', text: CMD, src: 'Messages', ago: 6 * min },
+    { kind: 'secret', src: 'Passwords', ago: 22000 },
+    { kind: 'file', name: 'Invoice-0412.pdf', src: 'Finder', ago: 12 * min },
+  ];
+  const held = { text: 'Thanks, talk soon!\nScott', name: 'Sign-off' };
+  let clips = seed(), sel = 0;
+
+  const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const ago = ms => { const s = Math.round(ms / 1000); return s < 60 ? s + 's ago' : Math.floor(s / 60) + 'm ago'; };
+  const clean = s => s.replace(/[“”]/g, '"').replace(/[‘’]/g, "'").replace(/^\s*[$%] /gm, '');
+
+  function preview(c) {
+    if (c.kind === 'secret') return '<div class="secret">•••••••••••• secret</div>';
+    if (c.kind === 'image') return '<img src="demo-screenshot.svg" alt="">';
+    if (c.kind === 'file') return `<div class="f">${ICON.file}<span>${esc(c.name)}</span></div>`;
+    return `<div class="t${/^\$ /.test(c.text) ? ' code' : ''}">${esc(c.text)}</div>`;
+  }
+  function footer(c) {
+    let f = `${c.src} · ${ago(c.ago)}`;
+    if (c.kind === 'secret') f += ` · clears in ${60 - Math.round(c.ago / 1000)}s`;
+    if (c.kind === 'text') f += ` · ${c.text.length} chars`;
+    return f;
+  }
+  function render(flash) {
+    let h = '<div class="wall-head"><img src="wordmark.png" alt=""><span>1-9, 0 paste · H held · ⇧ clean · esc</span></div>';
+    h += `<div class="row held${flash === 'H' ? ' flash' : ''}"><div class="num">H</div><div class="body"><div class="name">${held.name}</div>
+          <small>${esc(held.text.split('\n')[0])}</small></div></div><div class="div"></div>`;
+    clips.forEach((c, i) => {
+      h += `<div class="row${i === sel ? ' sel' : ''}${flash === i ? ' flash' : ''}"><div class="num">${i + 1}</div>
+            <div class="body">${preview(c)}<small>${footer(c)}</small></div>
+            ${c.kind === 'secret' ? '' : `<span class="pin">${ICON.pin}</span>`}</div>`;
+    });
+    wall.innerHTML = h;
+  }
+
+  let visible = true, wake = null;
+  new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible && wake) { wake(); wake = null; } }).observe(stage);
+  const sleep = async ms => { await new Promise(r => setTimeout(r, ms)); while (!visible) await new Promise(r => wake = r); };
+
+  async function press(...k) {
+    keys.innerHTML = k.map(x => `<b>${x}</b>`).join(''); keys.classList.add('on');
+    await sleep(750); keys.classList.remove('on'); await sleep(150);
+  }
+  const say = s => caption.textContent = s;
+  function caret() { field.querySelector('.caret')?.remove(); const c = document.createElement('span'); c.className = 'caret'; field.append(c); return c; }
+  function type(node) { field.querySelector('.ph')?.remove(); field.querySelector('.caret').before(node); }
+
+  async function openWall() {
+    sel = 0; render(); wall.hidden = false;
+    await Promise.all([...wall.querySelectorAll('img')].map(i => i.decode().catch(() => {})));
+    const s = stage.getBoundingClientRect(), c = field.querySelector('.caret').getBoundingClientRect();
+    const h = wall.offsetHeight, w = wall.offsetWidth;
+    let x = Math.min(Math.max(8, c.left - s.left), s.width - w - 8);
+    let y = c.bottom - s.top + 8; if (y + h > s.height - 8) y = Math.max(8, s.height - h - 8);
+    wall.style.left = x + 'px'; wall.style.top = y + 'px';
+    await sleep(20); wall.classList.remove('hide');
+  }
+  async function closeWall() { wall.classList.add('hide'); await sleep(160); wall.hidden = true; }
+  async function pick(label, i, node, keysPressed) {
+    await press('⌃', '⌘', 'V'); await openWall(); await sleep(1100);
+    if (typeof i === 'number') { sel = i; render(); await sleep(250); }
+    await press(...keysPressed); render(i); await sleep(220);
+    await closeWall(); type(node); say(label); await sleep(1500);
+  }
+  const text = (s, cls) => { const e = document.createElement('span'); if (cls) e.className = cls; e.textContent = s; return e; };
+  const br = () => document.createTextNode('\n');
+
+  async function loop() {
+    for (;;) {
+      clips = seed(); field.innerHTML = '<span class="ph">Write a note…</span>'; field.classList.remove('focus'); field.style.opacity = 1;
+      src.classList.remove('on'); say('');
+      await sleep(900);
+      say('Copy something.'); src.classList.add('on'); await sleep(900);
+      await press('⌘', 'C');
+      clips.unshift({ kind: 'text', text: COPIED, src: 'Safari', ago: 1000 }); clips.forEach((c, i) => i && (c.ago += 2000));
+      await sleep(300); src.classList.remove('on');
+      field.classList.add('focus'); caret(); await sleep(600);
+      say('Open the wall wherever you type.');
+      await pick('1 pastes what you just copied.', 0, text(COPIED), ['1']);
+      type(br()); await pick('2 pastes the long number. No retyping.', 1, text('9400 1118 9922 3344 5566 7710 0423'), ['2']);
+      type(br());
+      const img = new Image(); img.src = 'demo-screenshot.svg'; img.alt = '';
+      await pick('3 pastes the screenshot.', 2, img, ['3']);
+      await pick('⇧4 pastes it clean: no "$ ", straight quotes.', 3, text(clean(CMD), 'mono'), ['⇧', '4']);
+      type(br()); type(br());
+      await pick('H pastes your held clip.', 'H', text(held.text), ['H']);
+      await sleep(2200);
+      field.style.opacity = 0; say(''); await sleep(500);
+    }
+  }
+
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    clips.unshift({ kind: 'text', text: COPIED, src: 'Safari', ago: 1000 });
+    field.innerHTML = ''; field.classList.add('focus'); caret(); requestAnimationFrame(() => openWall());
+    say('⌃⌘V opens the wall. Press a number to paste.');
+  } else loop();
+})();
+</script>
+</body>
+</html>
