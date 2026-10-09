@@ -38,12 +38,8 @@ fi
 STAGE=$(mktemp -d); RW="$(mktemp -d)/rw.dmg"
 cp -R "$APP" "$STAGE/" && ln -s /Applications "$STAGE/Applications"
 mkdir "$STAGE/.background" && cp assets/dmg/background.tiff "$STAGE/.background/background.tiff"
-ALLOW="$STAGE/Allow Graffiti.webloc"
-cat > "$ALLOW" <<'LOC'
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0"><dict><key>URL</key><string>x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension?Security</string></dict></plist>
-LOC
+ALLOW="$STAGE/Allow Graffiti.url"
+printf '[InternetShortcut]\nURL=x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension?Security\n' > "$ALLOW"
 swiftc -O assets/set-icon.swift -o "$B/set-icon" 2>/dev/null && "$B/set-icon" "/System/Applications/System Settings.app/Contents/Resources/SystemSettings.icns" "$ALLOW" || true
 /Library/Developer/CommandLineTools/usr/bin/SetFile -a E "$ALLOW" || true
 hdiutil create -quiet -srcfolder "$STAGE" -volname "Graffiti $VERSION" -fs HFS+ -format UDRW -layout NONE -ov "$RW"
@@ -64,7 +60,7 @@ tell application "Finder"
     set background picture of o to file ".background:background.tiff"
     set position of item "Graffiti.app" of container window to {170, 165}
     set position of item "Applications" of container window to {470, 165}
-    set position of item "Allow Graffiti.webloc" of container window to {500, 370}
+    set position of item "Allow Graffiti.url" of container window to {500, 370}
     update without registering applications
     delay 1
     close
