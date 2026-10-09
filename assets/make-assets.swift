@@ -12,6 +12,22 @@ func flatten(_ img: NSImage, _ px: CGFloat) -> NSImage {
     NSGraphicsContext.restoreGraphicsState()
     let out = NSImage(size: img.size); out.addRepresentation(rep); return out
 }
+// Turns the white outline into a see-through gap, so the wordmark can be recoloured for dark mode
+// and the letters still stay apart.
+func knockout(_ img: NSImage, _ px: CGFloat) -> NSImage {
+    let flat = flatten(img, px)
+    let rep = flat.representations.first as! NSBitmapImageRep
+    let w = rep.pixelsWide, h = rep.pixelsHigh
+    let out = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: w, pixelsHigh: h, bitsPerSample: 8, samplesPerPixel: 4,
+                               hasAlpha: true, isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: w * 4, bitsPerPixel: 32)!
+    let src = rep.bitmapData!, dst = out.bitmapData!, row = rep.bytesPerRow
+    for y in 0..<h { for x in 0..<w {
+        let i = y * row + x * 4, o = y * w * 4 + x * 4
+        let light = (Int(src[i]) + Int(src[i + 1]) + Int(src[i + 2])) / 3
+        dst[o] = 0; dst[o + 1] = 0; dst[o + 2] = 0; dst[o + 3] = UInt8(max(0, Int(src[i + 3]) - light))
+    } }
+    let result = NSImage(size: img.size); result.addRepresentation(out); return result
+}
 func fit(_ img: NSImage, in r: CGRect) -> CGRect {
     let s = min(r.width / img.size.width, r.height / img.size.height)
     let w = img.size.width * s, h = img.size.height * s
@@ -29,7 +45,7 @@ func drawing(_ w: Int, _ h: Int, _ body: (CGContext) -> Void) -> CGImage {
 func save(_ img: CGImage, _ out: String) {
     try! NSBitmapImageRep(cgImage: img).representation(using: .png, properties: [:])!.write(to: URL(fileURLWithPath: out))
 }
-let wordmark = art("wordmark"), solidWord = art("wordmark-solid"), letterG = art("g"), sprayCan = flatten(art("can"), 2000), menuCan = art("menu")
+let wordmark = art("wordmark"), solidWord = knockout(art("wordmark"), 1600), letterG = art("g"), sprayCan = flatten(art("can"), 2000), menuCan = art("menu")
 let black = CGColor(gray: 0, alpha: 1)
 let paper = CGColor(red: 0.98, green: 0.976, blue: 0.965, alpha: 1)
 
