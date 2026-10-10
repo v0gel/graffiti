@@ -80,7 +80,6 @@ What changed in each version is in `CHANGELOG.md`.
 ## Credits
 
 By M. Scott Vogel for [Kingdom of Id](https://kingdomofid.com). Designed in Brooklyn ❤️
-The artwork is hand drawn.
 
 Say hi: hello@kingdomofid.com
 
